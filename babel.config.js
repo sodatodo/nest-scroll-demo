@@ -6,5 +6,16 @@ module.exports = {
       framework: 'react',
       ts: true
     }]
-  ]
+  ],
+  plugins: [
+    [
+      "import",
+      {
+        "libraryName": "@taroify/core",
+        "libraryDirectory": "",
+        "style": (name) => `${name}/index.scss`,
+      },
+      "@taroify/core",
+    ],
+  ],
 }
