@@ -1,16 +1,19 @@
 import { Component, useRef, useState } from 'react'
-import { Cell, List, Loading, Sticky, Tabs } from '@taroify/core'
+import { Cell, List, Loading, Tabs } from '@taroify/core'
+import Sticky from '../../components/sticky'
 import { View, Text, Image, ScrollView, Swiper, SwiperItem } from '@tarojs/components'
 import './index.scss'
-import { nextTick } from '@tarojs/taro'
+import { createSelectorQuery, nextTick } from '@tarojs/taro'
 
 import bannerUrl from './images/maple.jpg'
 
 const BasicList = () => {
+  createSelectorQuery
   const hasMoreRef = useRef(true)
   const listRef = useRef<string[]>([])
   const [loading, setLoading] = useState(false)
   const [activeKey, setActiveKey] = useState<Tabs.TabKey>(0)
+  const [fixed, setFixed] = useState(false)
 
   const scrollStyle = {
     height: '100vh'
@@ -38,11 +41,19 @@ const BasicList = () => {
   const handleChange = (e) => {
     setActiveKey(e.detail.current)
   }
+  const handleStickyChange = (fixedState: boolean) => {
+    setFixed(fixedState);
+  }
   return (
-    <View style={{ width: '100%', height: '100vh' }}>
+    <ScrollView 
+      style={{ width: '100%', height: '100vh' }}
+      scrollY={!fixed}
+    >
       <View>
         <Image src={bannerUrl} style={{ width: '100%' }} />
-        <Sticky>
+        <Sticky
+          onChange={handleStickyChange}
+        >
           <Tabs activeKey={activeKey} ellipsis={false} onChange={({ key }) => setActiveKey(key)}>
             <Tabs.TabPane title="标签 1"></Tabs.TabPane>
             <Tabs.TabPane title="标签 2"></Tabs.TabPane>
@@ -57,7 +68,7 @@ const BasicList = () => {
         <SwiperItem>
           <ScrollView
             className='scrollview'
-            scrollY
+            scrollY={fixed}
             scrollWithAnimation
             scrollTop={scrollTop}
             style={scrollStyle}
@@ -107,7 +118,7 @@ const BasicList = () => {
         </SwiperItem>
       </Swiper>
 
-    </View>
+    </ScrollView>
   )
 }
 

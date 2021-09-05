@@ -41,6 +41,7 @@
     "@tarojs/react": "3.3.6",
     "@tarojs/runtime": "3.3.6",
     "@tarojs/taro": "3.3.6",
+    "lodash": "^4.17.21",
     "react": "^17.0.0",
     "react-dom": "^17.0.0"
   },
