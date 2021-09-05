@@ -40,7 +40,7 @@ interface StickyProps {
   onChange?: (fixed: boolean) => void;
 }
 
-export default function Sticky(props: StickyProps) {
+const Sticky = React.forwardRef((props: StickyProps, ref) => {
   const { position = StickyPosition.Top, offset, container: containerRef, children, onChange } = props
   const rootRef = useRef<ViewProps>()
 
@@ -124,6 +124,11 @@ export default function Sticky(props: StickyProps) {
   }, [fixed])
 
   console.log(`fixed`, fixed)
+  React.useImperativeHandle(ref, () => ({
+    onOuterScroll: (scrollEvent: any) => {
+      onScroll();
+    }
+  }), [])
 
   usePageScroll(onScroll)
   useReady(onScroll)
@@ -139,4 +144,6 @@ export default function Sticky(props: StickyProps) {
       />
     </View>
   )
-}
+})
+
+export default Sticky;

@@ -34,7 +34,9 @@ const BasicList = () => {
     color: '#333'
   }
 
-  const onScrollToUpper = () => { }
+  const onScrollToUpper = () => { 
+    setFixed(false)
+  }
   const onScroll = (e) => {
     // console.log(`e`, e);
   }
@@ -44,15 +46,23 @@ const BasicList = () => {
   const handleStickyChange = (fixedState: boolean) => {
     setFixed(fixedState);
   }
+  const handleOuterScroll = (scrollInfo) => {
+    if (stickyRef.current) {
+      stickyRef.current.onOuterScroll();
+    }
+  }
+  const stickyRef = useRef(null)
   return (
     <ScrollView 
       style={{ width: '100%', height: '100vh' }}
-      scrollY={!fixed}
+      scrollY
+      onScroll={handleOuterScroll}
     >
       <View>
         <Image src={bannerUrl} style={{ width: '100%' }} />
         <Sticky
           onChange={handleStickyChange}
+          ref={stickyRef}
         >
           <Tabs activeKey={activeKey} ellipsis={false} onChange={({ key }) => setActiveKey(key)}>
             <Tabs.TabPane title="标签 1"></Tabs.TabPane>
@@ -85,7 +95,7 @@ const BasicList = () => {
         <SwiperItem>
           <ScrollView
             className='scrollview'
-            scrollY
+            scrollY={fixed}
             scrollWithAnimation
             scrollTop={scrollTop}
             style={scrollStyle}
@@ -102,7 +112,7 @@ const BasicList = () => {
         <SwiperItem>
           <ScrollView
             className='scrollview'
-            scrollY
+            scrollY={fixed}
             scrollWithAnimation
             scrollTop={scrollTop}
             style={scrollStyle}
