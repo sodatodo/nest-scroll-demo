@@ -1,11 +1,13 @@
-import * as _ from "lodash"
+import isNumber from "lodash/isNumber"
+import isArray from 'lodash/isArray'
+import forEach from 'lodash/forEach'
 import * as requestAnimationFrame from "raf"
 
 export function cancelRaf(rafId: number | number[]) {
-  if (_.isNumber(rafId)) {
+  if (isNumber(rafId)) {
     requestAnimationFrame.cancel(rafId)
-  } else if (_.isArray(rafId)) {
-    _.forEach(rafId, cancelRaf)
+  } else if (isArray(rafId)) {
+    forEach(rafId, cancelRaf)
   }
 }
 

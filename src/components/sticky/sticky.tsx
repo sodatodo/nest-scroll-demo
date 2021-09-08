@@ -68,7 +68,7 @@ const Sticky = React.forwardRef((props: StickyProps, ref) => {
       style.width = `${rootRect.width}px`
     }
     return style
-  }, [fixed, rootRect.height, rootRect.width])
+  }, [fixed, rootRect?.height, rootRect?.width])
 
   const stickyStyle: CSSProperties | undefined = useMemo(() => {
     if (!fixed) {
@@ -122,13 +122,6 @@ const Sticky = React.forwardRef((props: StickyProps, ref) => {
     console.log('sodalog on fixed change', fixed)
     onChange?.(fixed)
   }, [fixed])
-
-  console.log(`fixed`, fixed)
-  React.useImperativeHandle(ref, () => ({
-    onOuterScroll: (scrollEvent: any) => {
-      onScroll();
-    }
-  }), [])
 
   usePageScroll(onScroll)
   useReady(onScroll)

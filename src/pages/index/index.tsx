@@ -1,19 +1,27 @@
-import { Component, useRef, useState } from 'react'
-import { Cell, List, Loading, Tabs } from '@taroify/core'
-import Sticky from '../../components/sticky'
-import { View, Text, Image, ScrollView, Swiper, SwiperItem } from '@tarojs/components'
+import { useRef, useState } from 'react'
+import { Button, Tabs, Sticky } from '@taroify/core'
+// import Sticky from '../../components/sticky'
+import { View, Image, ScrollView } from '@tarojs/components'
 import './index.scss'
-import { createSelectorQuery, nextTick } from '@tarojs/taro'
 
 import bannerUrl from './images/maple.jpg'
+import { usePageScroll } from '@tarojs/runtime'
+import { createSelectorQuery } from '@tarojs/taro'
+
+const data: Array<any> = []
+
+for (let index = 0; index < 50; index++) {
+  const item = {
+    name: `item-${index}`,
+    key: `key-${index}`
+  }
+  data.push(item)
+}
 
 const BasicList = () => {
-  createSelectorQuery
-  const hasMoreRef = useRef(true)
-  const listRef = useRef<string[]>([])
-  const [loading, setLoading] = useState(false)
   const [activeKey, setActiveKey] = useState<Tabs.TabKey>(0)
   const [fixed, setFixed] = useState(false)
+  const [outerScroll, setOuterScroll] = useState(true)
 
   const scrollStyle = {
     height: '100vh'
@@ -34,101 +42,60 @@ const BasicList = () => {
     color: '#333'
   }
 
-  const onScrollToUpper = () => { 
-    setFixed(false)
+  const onScrollToUpper = () => {
+
   }
   const onScroll = (e) => {
-    // console.log(`e`, e);
+    console.log(`e`, e);
   }
-  const handleChange = (e) => {
-    setActiveKey(e.detail.current)
-  }
-  const handleStickyChange = (fixedState: boolean) => {
-    setFixed(fixedState);
-  }
-  const handleOuterScroll = (scrollInfo) => {
-    if (stickyRef.current) {
-      stickyRef.current.onOuterScroll();
-    }
-  }
-  const stickyRef = useRef(null)
-  return (
-    <ScrollView 
-      style={{ width: '100%', height: '100vh' }}
-      scrollY
-      onScroll={handleOuterScroll}
-    >
-      <View>
-        <Image src={bannerUrl} style={{ width: '100%' }} />
-        <Sticky
-          onChange={handleStickyChange}
-          ref={stickyRef}
-        >
-          <Tabs activeKey={activeKey} ellipsis={false} onChange={({ key }) => setActiveKey(key)}>
-            <Tabs.TabPane title="标签 1"></Tabs.TabPane>
-            <Tabs.TabPane title="标签 2"></Tabs.TabPane>
-            <Tabs.TabPane title="标签 3"></Tabs.TabPane>
-          </Tabs>
-        </Sticky>
-      </View>
-      <Swiper
-        onChange={handleChange}
-        style={{ height: '100vh' }}
-      >
-        <SwiperItem>
-          <ScrollView
-            className='scrollview'
-            scrollY={fixed}
-            scrollWithAnimation
-            scrollTop={scrollTop}
-            style={scrollStyle}
-            lowerThreshold={Threshold}
-            upperThreshold={Threshold}
-            onScrollToUpper={onScrollToUpper} // 使用箭头函数的时候 可以这样写 `onScrollToUpper={this.onScrollToUpper}`
-            onScroll={onScroll}
-          >
-            <View style={vStyleA}>A</View>
-            <View style={vStyleB}>B</View>
-            <View style={vStyleC}>C</View>
-          </ScrollView>
-        </SwiperItem>
-        <SwiperItem>
-          <ScrollView
-            className='scrollview'
-            scrollY={fixed}
-            scrollWithAnimation
-            scrollTop={scrollTop}
-            style={scrollStyle}
-            lowerThreshold={Threshold}
-            upperThreshold={Threshold}
-            onScrollToUpper={onScrollToUpper} // 使用箭头函数的时候 可以这样写 `onScrollToUpper={this.onScrollToUpper}`
-            onScroll={onScroll}
-          >
-            <View style={vStyleA}>A</View>
-            <View style={vStyleB}>B</View>
-            <View style={vStyleC}>C</View>
-          </ScrollView>
-        </SwiperItem>
-        <SwiperItem>
-          <ScrollView
-            className='scrollview'
-            scrollY={fixed}
-            scrollWithAnimation
-            scrollTop={scrollTop}
-            style={scrollStyle}
-            lowerThreshold={Threshold}
-            upperThreshold={Threshold}
-            onScrollToUpper={onScrollToUpper} // 使用箭头函数的时候 可以这样写 `onScrollToUpper={this.onScrollToUpper}`
-            onScroll={onScroll}
-          >
-            <View style={vStyleA}>A</View>
-            <View style={vStyleB}>B</View>
-            <View style={vStyleC}>C</View>
-          </ScrollView>
-        </SwiperItem>
-      </Swiper>
 
-    </ScrollView>
+  const [height, setHeight] = useState(800);
+  // const handleChange = (e) => {
+  //   // setActiveKey(e.detail.current)
+  //   if (height === 300) {
+  //     setHeight(500)
+  //   } else {
+  //     setHeight(300)
+  //   }
+  // }
+  // const handleStickyChange = (fixedState: boolean) => {
+  //   // setFixed(fixedState);
+  //   console.log(`stickyChange`, fixedState)
+  // }
+  // const handleOuterScroll = (scrollInfo) => {
+  //   if (stickyRef.current) {
+  //     stickyRef.current.onOuterScroll();
+  //   }
+  // }
+
+  const stickyRef = useRef(null)
+
+  const query = createSelectorQuery()
+  const [top, setTop] = useState(200);
+  usePageScroll(() => {
+    query.select('#target').boundingClientRect(rect => {
+      console.log(`rect`, rect);
+      setTop(rect.top)
+    }).exec()
+  })
+
+  return (
+    <View
+      style={{ width: '100%' }}
+    >
+      <View style={{ height: '200px', backgroundColor: 'cyan' }} ></View>
+      <View style={{ height: 'calc(100vh)', backgroundColor: 'pink' }}>
+        <View style={{ height: 'calc(100% - env(safe-area-inset-bottom))', backgroundColor: 'orange' }} id="target">
+          View usePageScroll top: {top}
+        </View>
+      </View>
+      {/* <Image src={bannerUrl} style={{ width: '100%', height: '240px' }} />
+      <View style={{ height: 'calc(100vh - 100rpx - env(safe-area-inset-bottom))', backgroundColor: 'cyan' }}></View>
+      <View style={{ height: 'env(safe-area-inset-bottom)' }}>填充</View>
+      <View style={{ height: '50rpx'}} ></View> */}
+
+
+    </View>
   )
 }
 

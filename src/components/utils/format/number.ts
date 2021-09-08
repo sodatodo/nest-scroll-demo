@@ -1,4 +1,4 @@
-import * as _ from "lodash"
+import toNumber from 'lodash/toNumber';
 
 export function clamp(num: number, min: number, max: number): number {
   return Math.min(Math.max(num, min), max)
@@ -39,5 +39,5 @@ export function formatNumber(value: string, allowDot = true, allowMinus = true) 
 // add num and avoid float number
 export function addNumber(num1: number, num2: number) {
   const cardinal = 10 ** 10
-  return Math.round((_.toNumber(num1) + _.toNumber(num2)) * cardinal) / cardinal
+  return Math.round((toNumber(num1) + toNumber(num2)) * cardinal) / cardinal
 }

@@ -1,9 +1,9 @@
-import * as _ from "lodash"
+import filter from "lodash/filter"
 import { Children, isValidElement, ReactElement, ReactNode } from "react"
 
 export function findChildren(children: ReactNode, type: any): ReactNode[] {
   const nodes: ReactNode[] = Children.toArray(children)
-  return _.filter(nodes, (node) => {
+  return filter(nodes, (node) => {
     if (!isValidElement(node)) {
       return false
     }
